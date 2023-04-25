@@ -1,0 +1,135 @@
+describe, it, => all the same
+
+Spy
+  Jest Spy
+    const mock = jest.fn()
+    expect(mock).toHaveBeenCalledTimes(times)
+
+    jest.spyOn(
+      view,
+      view.onStopBtn.name,
+    )
+    expect(view.onStopBtn).toHaveBeenCalledTimes(times)
+    expect(view.toggleDisableCommandBtn).toHaveBeenNthCalledWith(1, onClickElement.srcElement.classList)
+
+  Node.js Spy
+    const mock = mock.fn()
+    assert.deepStrictEqual(mock.mock.calls.length, 1)
+
+    mock.method(
+      service,
+      service.broadCast.name
+    )
+    assert.deepStrictEqual(service.currentReadable.unpipe.mock.calls.length, 1)
+    assert.deepStrictEqual(service.currentReadable.unpipe.mock.calls[0].arguments, [1,2])
+    assert.deepStrictEqual(service.currentReadable.unpipe.mock.calls[1].arguments, [1,2])
+
+Stub 
+  Jest
+    jest.spyOn(
+      document,
+      "querySelectorAll",
+    ).mockReturnValue([btn])
+
+    jest.spyOn(
+      document,
+      "querySelectorAll",
+    ).mockResolvedValue([btn])
+
+    jest.spyOn(
+      document,
+      "querySelectorAll",
+    )
+    .mockReturnValueOnce(1)
+    .mockReturnValueOnce(2)
+    .mockReturnValueOnce(3)
+
+  Node.js 
+    mock.method(
+      service,
+      service.broadCast.name
+    ).mock.mockImplementation(() => [btn])
+
+    mock.method(
+      service,
+      service.broadCast.name
+    ).mock.mockImplementation(async () => [btn])
+
+    m = mock.method(
+      service,
+      service.broadCast.name
+    ).mock
+    
+    m.mockImplementationOnce(() => 1, 0)
+    m.mockImplementationOnce(() => 2, 1)
+    m.mockImplementationOnce(() => 3, 2)
+
+FakeTimers 
+  jest
+    jest.useFakeTimers()
+    jest.advanceTimersByTime(9000);
+    jest.useRealTimers();
+
+
+  Node.js 
+    const assert = require('assert');
+    const { setTimeout, setInterval, clearImmediate, clearInterval } = require('timers');
+
+    describe('my tests', () => {
+      let clock;
+
+      beforeEach(() => {
+        clock = { now: Date.now() };
+        global.Date.now = () => clock.now;
+        global.setTimeout = (fn, delay, ...args) => {
+          const id = setTimeout(() => {
+            fn(...args);
+            delete clock[id];
+          }, delay);
+          clock[id] = { fn, delay };
+          return id;
+        };
+        global.setInterval = (fn, delay, ...args) => {
+          const id = setInterval(() => {
+            fn(...args);
+            clock[id].due += delay;
+          }, delay);
+          clock[id] = { fn, delay, due: clock.now + delay };
+          return id;
+        };
+        global.clearImmediate = (id) => {
+          clearTimeout(id);
+          delete clock[id];
+        };
+        global.clearInterval = (id) => {
+          clearInterval(id);
+          delete clock[id];
+        };
+      });
+
+      afterEach(() => {
+        global.Date.now = Date.now;
+      });
+
+      it('should delay the execution of a function', () => {
+        const callback = () => {};
+        const delay = 1000;
+
+        setTimeout(callback, delay);
+
+        clock.now += delay;
+
+        assert(Object.keys(clock).length === 0);
+      });
+
+      it('should advance the timers by a specified time', () => {
+        const callback = () => {};
+        const interval = 1000;
+
+        setInterval(callback, interval);
+
+        clock.now += interval;
+
+        assert(clock[1].due === clock.now + interval);
+      });
+    });
