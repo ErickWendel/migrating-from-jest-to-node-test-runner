@@ -133,3 +133,26 @@ FakeTimers
         assert(clock[1].due === clock.now + interval);
       });
     });
+
+
+Spy
+// jest.fn
+// setInterval 
+// called 3 times with 1o, 2o, 3o params
+
+Stub 
+  // rick and morty 
+  // stub to return array 
+  // next page 
+  //  .mockReturnValueOnce(1)
+  //  .mockReturnValueOnce(2)
+  //  .mockReturnValueOnce(3)
+
+FakeTimers 
+  jest
+    jest.useFakeTimers()
+    jest.advanceTimersByTime(9000);
+    jest.useRealTimers();
+  
+  runForTenSeconds
+    yield 'executed...'
