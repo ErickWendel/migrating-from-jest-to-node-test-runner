@@ -1,0 +1,14 @@
+{
+  "name": "nodejs",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test:dev": "node --watch --test test/",
+    "test": "node --test test/"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
